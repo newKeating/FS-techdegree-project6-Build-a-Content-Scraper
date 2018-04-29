@@ -1,0 +1,24 @@
+{
+  "name": "content-scraper",
+  "version": "0.0.1",
+  "description": "TeamTreeHouse Full-Stack Javascript Project6 Build-A-Content-Scraper",
+  "main": "scraper.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newKeating/FS-techdegree-project6-Build-a-Content-Scraper.git"
+  },
+  "author": "HanJoon Peter Kim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/newKeating/FS-techdegree-project6-Build-a-Content-Scraper/issues"
+  },
+  "homepage": "https://github.com/newKeating/FS-techdegree-project6-Build-a-Content-Scraper#readme"
+}
