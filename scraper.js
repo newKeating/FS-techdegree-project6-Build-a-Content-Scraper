@@ -1,6 +1,9 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-
+const fs = require('fs');
+const Json2csvParser = require('json2csv').Parser;
+let date = new Date().toISOString().slice(0,10);
+let time = new Date().toString().slice(16);
 // Request HTML body to The URL (http://shirts4mike.com/shirts.php)
   // Used npm module request-promise for requesting
   // cheerio makes jQuery available in Node.js
@@ -16,7 +19,6 @@ const scrapeShirtsLink = async () => {
       $('ul.products a').each((i, link) => {
         shirtsLink[i] = `http://shirts4mike.com/${$(link).attr("href")}`;
       });
-      console.log(shirtsLink);
     })
 }
 
@@ -24,8 +26,6 @@ const scrapeShirtsLink = async () => {
   // Also, it saves shirt-URL and the current time into shirtsInfo-array with scraped shirt-infos.
 const scrapeShirtsInfo = async () => {
   let shirtsHtml = await Promise.all(shirtsLink.map(link => rp(link)));
-  let date = new Date().toISOString().slice(0,10);
-  let time = new Date().toString().slice(16);
   shirtsHtml.forEach((shirtHtml, i) => {
     let $ = cheerio.load(shirtHtml);
     let shirtInfo = {
@@ -33,16 +33,27 @@ const scrapeShirtsInfo = async () => {
       price: $('.price').text(),
       imageUrl: `http://shirts4mike.com/${$('img').attr('src')}`,
       url: shirtsLink[i],
-      date: `${date} ${time}`
+      time: `${date} ${time}`
     }
     shirtsInfo.push(shirtInfo);
   });
   console.log(shirtsInfo);
 }
 
+// saveCSV() saves shirtsInfo in a csv file using json2csv module.
+const saveCSV = () => {
+  const fields = Object.keys(shirtsInfo[0]);
+  const parser = new Json2csvParser({ fields });
+  const csv = parser.parse(shirtsInfo);
+  const csvFileName = `./data/${date}.csv`;
+  fs.mkdir('./data');
+  fs.writeFileSync(csvFileName, csv);
+}
+
 // Because of ES2017 async and await features, it is possible to use .then() method.
 scrapeShirtsLink()
   .then(scrapeShirtsInfo)
+  .then(saveCSV)
   .catch((err) => {
     console.log(err);
   });
