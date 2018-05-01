@@ -40,13 +40,17 @@ const scrapeShirtsInfo = async () => {
 }
 
 // saveCSV() saves shirtsInfo in a csv file using json2csv module.
-const saveCSV = () => {
+  // Save the Data into a CSV file
+    // The CSV file must be named for the date it was created, e.g. 2016-11-21.csv.
+    // The Order of CSV file column headers are Title, Price, ImageURL, URL, and Time.
+    // The CSV file should be saved inside the ‘data’ folder.
+const saveCSV = async () => {
   const fields = Object.keys(shirtsInfo[0]);
   const parser = new Json2csvParser({ fields });
   const csv = parser.parse(shirtsInfo);
   const csvFileName = `./data/${date}.csv`;
   if(!fs.existsSync('./data')) {
-    fs.mkdirsync('./data');
+    fs.mkdirSync('./data');
   }
   fs.writeFileSync(csvFileName, csv);
   console.log('csv-file created');
@@ -60,9 +64,3 @@ scrapeShirtsLink()
     const errorMessage = `There’s been a 404 error. Cannot connect to http://shirts4mike.com.`
     console.log(errorMessage);
   });
-
-
-// Save the Data into a CSV file
-  // The CSV file must be named for the date it was created, e.g. 2016-11-21.csv.
-  // The Order of CSV file column headers are Title, Price, ImageURL, URL, and Time.
-  // The CSV file should be saved inside the ‘data’ folder.
