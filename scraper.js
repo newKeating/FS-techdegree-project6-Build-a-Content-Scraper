@@ -37,7 +37,6 @@ const scrapeShirtsInfo = async () => {
     }
     shirtsInfo.push(shirtInfo);
   });
-  console.log(shirtsInfo);
 }
 
 // saveCSV() saves shirtsInfo in a csv file using json2csv module.
@@ -46,8 +45,11 @@ const saveCSV = () => {
   const parser = new Json2csvParser({ fields });
   const csv = parser.parse(shirtsInfo);
   const csvFileName = `./data/${date}.csv`;
-  fs.mkdir('./data');
+  if(!fs.existsSync('./data')) {
+    fs.mkdirsync('./data');
+  }
   fs.writeFileSync(csvFileName, csv);
+  console.log('csv-file created');
 }
 
 // Because of ES2017 async and await features, it is possible to use .then() method.
@@ -55,7 +57,8 @@ scrapeShirtsLink()
   .then(scrapeShirtsInfo)
   .then(saveCSV)
   .catch((err) => {
-    console.log(err);
+    const errorMessage = `There’s been a 404 error. Cannot connect to http://shirts4mike.com.`
+    console.log(errorMessage);
   });
 
 
